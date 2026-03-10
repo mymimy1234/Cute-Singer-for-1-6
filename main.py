@@ -6,7 +6,7 @@ import asyncio
 import os
 from dotenv import load_dotenv
 
-# 1. 맥(macOS) Opus 라이브러리 자동 로드
+
 if not opus.is_loaded():
     opus_paths = [
         '/opt/homebrew/lib/libopus.dylib',
@@ -22,7 +22,7 @@ if not opus.is_loaded():
             except Exception as e:
                 print(f"{path} 로드 실패: {e}")
 
-# 2. 설정 로드
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -59,15 +59,15 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name="!도움말 입력"))
     print(f'{bot.user.name} 봇 온라인!')
 
-# --- 커맨드 섹션 ---
+
 
 @bot.command()
 async def 도움말(ctx):
     embed = discord.Embed(title="🎵 음악 봇 명령어 안내", color=discord.Color.blue())
-    embed.add_field(name="🎤 입장/퇴장", value="`!들어와`, `!나가`", inline=False)
-    embed.add_field(name="🎶 재생", value="`!틀어 [제목]`, `!패스`", inline=False)
-    embed.add_field(name="⏸️ 제어", value="`!멈춰`, `!다시`", inline=False)
-    embed.add_field(name="📢 설정", value="`!볼륨 [0~100]`, `!가사`, `!목록`", inline=False)
+    embed.add_field(name="입장/퇴장", value="`!들어와`, `!나가`", inline=False)
+    embed.add_field(name="재생", value="`!틀어 [제목]`, `!패스`", inline=False)
+    embed.add_field(name="제어", value="`!멈춰`, `!다시`", inline=False)
+    embed.add_field(name="설정", value="`!볼륨 [0~100]`, `!가사`, `!목록`", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
@@ -93,7 +93,7 @@ async def 틀어(ctx, *, search):
             current_song_title = info['title']
             source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(song_data['url'], **FFMPEG_OPTIONS), volume=current_volume)
             ctx.voice_client.play(source, after=lambda e: play_next(ctx))
-            await ctx.send(f"🎵 재생 중: **{current_song_title}**")
+            await ctx.send(f" 재생 중: **{current_song_title}**")
 
 @bot.command()
 async def 멈춰(ctx):
@@ -108,9 +108,9 @@ async def 다시(ctx):
         await ctx.send("▶다시 재생!")
 
 @bot.command()
-async def 볼륨(ctx, volume: float): # int에서 float로 변경하여 소수점 허용
+async def 볼륨(ctx, volume: float): 
     global current_volume
-    # 사용자가 0~1 사이로 입력했을 때 (예: 0.9)와 1~100 사이로 입력했을 때를 모두 처리
+    
     if 0 <= volume <= 1:
         current_volume = volume
     elif 1 < volume <= 100:
@@ -148,7 +148,7 @@ async def 나가(ctx):
     if ctx.voice_client:
         queue.clear()
         await ctx.voice_client.disconnect()
-        await ctx.send("👋 안녕!")
+        await ctx.send("안녕!")
 
 if TOKEN:
     bot.run(TOKEN)
